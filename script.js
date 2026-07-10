@@ -243,11 +243,28 @@ function updateTopbarAvatar() {
   }
 }
 
+function setSidebarOpen(open){
+  const sb=document.getElementById('sidebar');
+  const bd=document.getElementById('sidebarBackdrop');
+  const menuBtn=document.getElementById('menuToggle');
+  if(!sb) return;
+  sb.classList.toggle('open', open);
+  if(bd){
+    bd.hidden = false;
+    bd.classList.toggle('open', open);
+    if(!open){
+      // fully remove from the a11y/tab order once the fade-out finishes
+      window.setTimeout(()=>{ if(!sb.classList.contains('open')) bd.hidden = true; }, 250);
+    }
+  }
+  menuBtn?.setAttribute('aria-expanded', open ? 'true' : 'false');
+}
+
 function initNavigation() {
   document.querySelectorAll('.nav-item').forEach(item=>{
     item.addEventListener('click',()=>{
       navigateTo(item.dataset.page);
-      if(window.innerWidth<960) document.getElementById('sidebar').classList.remove('open');
+      if(window.innerWidth<960) setSidebarOpen(false);
     });
     // Keyboard accessibility: nav items are focusable <li> elements,
     // so Enter/Space must trigger the same action as a mouse click.
@@ -255,17 +272,22 @@ function initNavigation() {
       if(e.key==='Enter'||e.key===' '){
         e.preventDefault();
         navigateTo(item.dataset.page);
-        if(window.innerWidth<960) document.getElementById('sidebar').classList.remove('open');
+        if(window.innerWidth<960) setSidebarOpen(false);
       }
     });
   });
   const menuBtn=document.getElementById('menuToggle');
   menuBtn.addEventListener('click',()=>{
     const sb=document.getElementById('sidebar');
-    const open=sb.classList.toggle('open');
-    menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    setSidebarOpen(!sb.classList.contains('open'));
+  });
+  const backdrop=document.getElementById('sidebarBackdrop');
+  backdrop?.addEventListener('click', ()=> setSidebarOpen(false));
+  window.addEventListener('keydown',(e)=>{
+    if(e.key==='Escape') setSidebarOpen(false);
   });
 }
+
 
 function navigateTo(page) {
   document.querySelectorAll('.nav-item').forEach(i=>{
