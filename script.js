@@ -1241,6 +1241,41 @@ function renderMyBooks() {
    STUDENT PORTAL: MY PROFILE (avatar + Gmail)
    ============================================================ */
 const MAX_AVATAR_BYTES = 600_000; // keep localStorage usage sane (base64 inflates ~33%)
+const AVATAR_MAX_DIMENSION = 320;  // profile photo is only ever shown small, so this is plenty sharp
+
+// Resizes + compresses an image file down to a small square-ish JPEG data URL
+// so any phone photo (often several MB) fits comfortably under our storage
+// budget, instead of forcing the user to find/shrink a file themselves.
+function compressAvatarFile(file, maxBytes = MAX_AVATAR_BYTES, maxDim = AVATAR_MAX_DIMENSION) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        const scale = Math.min(1, maxDim / Math.max(img.width, img.height));
+        const width = Math.max(1, Math.round(img.width * scale));
+        const height = Math.max(1, Math.round(img.height * scale));
+        const canvas = document.createElement('canvas');
+        canvas.width = width; canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+
+        let quality = 0.85;
+        let dataUrl = canvas.toDataURL('image/jpeg', quality);
+        // Step quality down until it fits, rather than rejecting the photo outright.
+        while (dataUrl.length * 0.75 > maxBytes && quality > 0.3) {
+          quality -= 0.1;
+          dataUrl = canvas.toDataURL('image/jpeg', quality);
+        }
+        resolve(dataUrl);
+      };
+      img.onerror = () => reject(new Error('Could not read that image'));
+      img.src = reader.result;
+    };
+    reader.onerror = () => reject(new Error('Could not read that image'));
+    reader.readAsDataURL(file);
+  });
+}
 
 function renderStudentProfile() {
   const u = Utils.getUser(AUTH.getStudentUserId());
@@ -1285,36 +1320,38 @@ function initProfilePage() {
 
   avatarEditBtn?.addEventListener('click', ()=> avatarInput?.click());
 
-  avatarInput?.addEventListener('change', ()=>{
+  avatarInput?.addEventListener('change', async ()=>{
     const file = avatarInput.files && avatarInput.files[0];
     if (!file) return;
     if (!file.type.startsWith('image/')) {
       showToast('Please choose an image file', 'error'); avatarInput.value=''; return;
     }
-    if (file.size > MAX_AVATAR_BYTES) {
-      showToast('That image is too large — please pick one under 600KB', 'error'); avatarInput.value=''; return;
+    let dataUrl;
+    try {
+      // Photos straight off a phone are often several MB — shrink/compress
+      // them here instead of making the user find a smaller file.
+      dataUrl = await compressAvatarFile(file);
+    } catch (err) {
+      showToast('Could not read that image — please try another', 'error');
+      avatarInput.value=''; return;
     }
-    const reader = new FileReader();
-    reader.onload = () => {
-      const u = Utils.getUser(AUTH.getStudentUserId());
-      if (!u) return;
-      const previousAvatar = u.avatar;
-      u.avatar = reader.result;
+    const u = Utils.getUser(AUTH.getStudentUserId());
+    if (!u) return;
+    const previousAvatar = u.avatar;
+    u.avatar = dataUrl;
+    updateProfileAvatarPreview(u.avatar);
+    updateTopbarAvatar();
+    if (DB.save()) {
+      showToast('Profile picture updated');
+    } else {
+      // Ran out of browser storage space — roll back so the UI doesn't
+      // claim a photo is saved when it silently wasn't.
+      u.avatar = previousAvatar;
       updateProfileAvatarPreview(u.avatar);
       updateTopbarAvatar();
-      if (DB.save()) {
-        showToast('Profile picture updated');
-      } else {
-        // Ran out of browser storage space — roll back so the UI doesn't
-        // claim a photo is saved when it silently wasn't.
-        u.avatar = previousAvatar;
-        updateProfileAvatarPreview(u.avatar);
-        updateTopbarAvatar();
-        showToast('That image is too large to store in this browser demo — try a smaller photo', 'error');
-      }
-    };
-    reader.onerror = () => showToast('Could not read that image — please try another', 'error');
-    reader.readAsDataURL(file);
+      showToast('That image is too large to store in this browser demo — try a smaller photo', 'error');
+    }
+    avatarInput.value = '';
   });
 
   removeBtn?.addEventListener('click', ()=>{
