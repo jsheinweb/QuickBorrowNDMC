@@ -30,16 +30,16 @@
   --cream:       #F5F5F5;
   --white:       #FFFFFF;
 
-  /* Backgrounds — softened to a muted khaki tone instead of bright white/grey */
-  --bg-base:   #E8E2CC;
-  --bg-deep:   #DED6BA;
-  --bg-orb1:   #D3C8A3;
-  --bg-orb2:   #E3D2AE;
-  --bg-orb3:   #D6CBA8;
+  /* Backgrounds — soft light blue, easy on the eyes */
+  --bg-base:   #DCE7F5;
+  --bg-deep:   #CBDCEF;
+  --bg-orb1:   #B9D2EE;
+  --bg-orb2:   #D2E3F6;
+  --bg-orb3:   #C7DCF0;
 
-  /* Glass / surfaces (khaki-tinted cards on the muted canvas) */
-  --glass-bg:     rgba(238, 231, 208, 0.74);
-  --glass-bg2:    rgba(240, 234, 214, 0.90);
+  /* Glass / surfaces (light-blue-tinted cards on the soft canvas) */
+  --glass-bg:     rgba(228, 238, 250, 0.74);
+  --glass-bg2:    rgba(233, 242, 252, 0.90);
   --glass-border: rgba(27, 78, 245, 0.16);
   --glass-gold:   rgba(242, 153, 74, 0.18);
   --glass-hover:  rgba(27, 78, 245, 0.07);
@@ -487,7 +487,7 @@ body {
 
 /* ---- FORM ELEMENTS ---- */
 .glass-input {
-  background: rgba(244,238,220,.82);
+  background: rgba(230,240,251,.85);
   border: 1px solid rgba(76,125,255,.18);
   border-radius: var(--radius);
   color: var(--text-bright);
@@ -507,7 +507,7 @@ body {
 .glass-input[type="date"] { color-scheme: light; }
 
 .glass-select {
-  background: rgba(244,238,220,.82);
+  background: rgba(230,240,251,.85);
   border: 1px solid rgba(76,125,255,.18);
   border-radius: var(--radius);
   color: var(--text-main);
@@ -519,7 +519,7 @@ body {
 }
 .glass-select:focus { border-color: var(--green-mid); }
 .glass-select.sm { padding: 6px 10px; font-size: 14px; }
-.glass-select option { background: #F4EEDC; color: var(--text-bright); }
+.glass-select option { background: #E9F2FC; color: var(--text-bright); }
 
 /* ---- BUTTONS ---- */
 .btn-primary {
@@ -623,7 +623,7 @@ body {
 .modal-overlay.open { display: flex; animation: fadeIn .2s ease; }
 @keyframes fadeIn { from{opacity:0} to{opacity:1} }
 .glass-modal {
-  background: rgba(244,238,220,.92);
+  background: rgba(233,242,252,.94);
   border: 1px solid rgba(76,125,255,.3);
   border-radius: var(--radius-lg);
   width: min(580px, 95vw);
@@ -831,7 +831,7 @@ body {
 }
 
 .glass-textarea {
-  background: rgba(244,238,220,.82);
+  background: rgba(230,240,251,.85);
   border: 1px solid rgba(76,125,255,.18);
   border-radius: var(--radius);
   color: var(--text-bright);
@@ -1064,7 +1064,7 @@ body.app-locked .login-screen {
 .a11y-btn {
   min-width: 30px; height: 30px; padding: 0 7px;
   display: inline-flex; align-items: center; justify-content: center;
-  background: rgba(244,238,220,.75); border: 1px solid var(--glass-border);
+  background: rgba(230,240,251,.78); border: 1px solid var(--glass-border);
   border-radius: 7px; color: var(--text-main); cursor: pointer;
   font-family: var(--font-mono); font-size: 13px; font-weight: 600;
   transition: all .15s;
