@@ -135,6 +135,7 @@ body {
   padding: 22px;
   margin-bottom: 18px;
   position: relative; z-index: 2;
+  min-width: 0;
   transition: border-color .25s, box-shadow .25s;
 }
 .glass-card:hover { border-color: rgba(76,125,255,.28); }
@@ -310,7 +311,7 @@ body {
 .topbar-avatar { width: 18px; height: 18px; border-radius: 50%; object-fit: cover; }
 
 /* ---- PAGES ---- */
-.page { display: none; padding: 28px 28px; animation: slideUp .3s ease; }
+.page { display: none; padding: 28px 28px; animation: slideUp .3s ease; min-width: 0; }
 .page.active { display: block; }
 @keyframes slideUp {
   from { opacity:0; transform:translateY(12px); }
@@ -424,7 +425,7 @@ body {
 /* .glass-card.wide spans 2fr naturally via parent .charts-row grid */
 
 /* ---- TABLES ---- */
-.table-wrap { overflow-x: auto; }
+.table-wrap { overflow-x: auto; width: 100%; min-width: 0; -webkit-overflow-scrolling: touch; }
 .data-table { width: 100%; border-collapse: collapse; font-size: 15px; }
 .data-table thead tr {
   background: rgba(27,78,245,.15);
@@ -776,7 +777,17 @@ body {
   .borrow-grid { grid-template-columns: 1fr; }
   .form-row { grid-template-columns: 1fr; }
   .stats-grid { grid-template-columns: repeat(2,1fr); }
+  .sidebar-backdrop {
+    position: fixed; inset: 0; z-index: 150;
+    background: rgba(10, 14, 24, .55);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+    opacity: 0; pointer-events: none;
+    transition: opacity .25s ease;
+  }
+  .sidebar-backdrop.open { opacity: 1; pointer-events: auto; }
 }
+.sidebar-backdrop[hidden] { display: none; }
 @media (max-width: 580px) {
   .page { padding: 16px; }
   .stats-grid { grid-template-columns: 1fr 1fr; }
@@ -824,6 +835,7 @@ body {
   gap: 22px;
   align-items: start;
 }
+.issue-form-col, .issue-history-col { min-width: 0; }
 
 .issue-history-scroll {
   max-height: 380px;
