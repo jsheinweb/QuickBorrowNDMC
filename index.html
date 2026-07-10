@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>QuickBorrow — Notre Dame of Midsayap College</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Raleway:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body class="app-locked">
+
+  <a href="#mainContent" class="skip-link">Skip to main content</a>
+
+  <!-- Ambient background orbs -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="noise-overlay"></div>
+
+  <!-- ===================== LANDING: choose a portal ===================== -->
+  <div class="login-screen" style="display:flex" id="mainContent">
+    <div class="login-card glass-modal" role="main" aria-labelledby="landingTitle" aria-describedby="landingSubtitle">
+      <div class="login-logo">
+        <img id="landingNdmLogo" alt="Notre Dame of Midsayap College official seal" class="seal-img"/>
+      </div>
+      <h1 id="landingTitle" class="login-title">QuickBorrow</h1>
+      <p id="landingSubtitle" class="login-subtitle">Library Management System — Notre Dame of Midsayap College</p>
+
+      <div class="role-select">
+        <p class="role-select-prompt">Choose how you'd like to sign in</p>
+
+        <a href="librarian.html" class="role-select-card">
+          <span class="role-select-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+          <span class="role-select-text">
+            <span class="role-select-card-title">Librarian</span>
+            <span class="role-select-card-desc">Manage the catalog, users, borrowing &amp; reports</span>
+          </span>
+          <svg class="role-select-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+        </a>
+
+        <a href="student.html" class="role-select-card">
+          <span class="role-select-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/></svg></span>
+          <span class="role-select-text">
+            <span class="role-select-card-title">Student</span>
+            <span class="role-select-card-desc">Search the catalog and read books online</span>
+          </span>
+          <svg class="role-select-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Each portal is now its own page (librarian.html / student.html) with
+    // its own dedicated login form. If someone already has an active
+    // session — e.g. they came back to this chooser without logging out —
+    // send them straight to their portal instead of making them pick again.
+    (function(){
+      var role = sessionStorage.getItem('qb2_role');
+      var active = sessionStorage.getItem('qb2_session') === 'active';
+      if (active && role === 'librarian') window.location.replace('librarian.html');
+      if (active && role === 'student') window.location.replace('student.html');
+    })();
+    var seal = document.getElementById('landingNdmLogo');
+    if (seal) seal.src = 'https://tse2.mm.bing.net/th/id/OIP.Dg1QxmBsTRMotX-hBVGp9gHaG8?pid=Api&h=220&P=0';
+  </script>
+</body>
+</html>

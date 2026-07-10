@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>QuickBorrow Librarian Portal — Notre Dame of Midsayap College</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Raleway:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body class="app-locked" data-role="librarian">
+
+  <!-- Skip link: keyboard users can jump straight to main content -->
+  <a href="#mainContent" class="skip-link">Skip to main content</a>
+
+  <!-- Ambient background orbs -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="noise-overlay"></div>
+
+    <!-- ===================== LOGIN SCREEN (Librarian only) ===================== -->
+  <div class="login-screen" id="loginScreen">
+    <div class="login-card glass-modal" id="loginCard" role="dialog" aria-modal="true" aria-labelledby="loginTitle" aria-describedby="loginSubtitle">
+      <div class="login-logo">
+        <img id="loginNdmLogo" alt="Notre Dame of Midsayap College official seal" class="seal-img"/>
+      </div>
+      <h1 id="loginTitle" class="login-title">QuickBorrow</h1>
+      <p id="loginSubtitle" class="login-subtitle">Library Management System — Notre Dame of Midsayap College</p>
+
+      <div class="login-role-panel" id="librarianLoginPanel">
+        <div class="login-role-heading">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          Librarian Sign In
+        </div>
+
+        <form id="librarianLoginForm" novalidate>
+          <div class="field-group">
+            <label class="field-label" for="libUsername">Username <span class="required-mark" aria-hidden="true">*</span></label>
+            <input type="text" id="libUsername" class="glass-input full" placeholder="e.g. librarian" autocomplete="username" required aria-required="true" aria-describedby="libUsernameError"/>
+            <span class="field-error" id="libUsernameError" role="alert" aria-live="polite"></span>
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="libPassword">Password <span class="required-mark" aria-hidden="true">*</span></label>
+            <div class="password-wrap">
+              <input type="password" id="libPassword" class="glass-input full" placeholder="Enter your password" autocomplete="current-password" required aria-required="true" aria-describedby="libPasswordError"/>
+              <button type="button" class="password-toggle" id="libPasswordToggle" aria-label="Show password" aria-pressed="false">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+            <span class="field-error" id="libPasswordError" role="alert" aria-live="polite"></span>
+          </div>
+
+          <div class="login-options">
+            <label class="checkbox-label" for="libRememberMe">
+              <input type="checkbox" id="libRememberMe"/>
+              <span>Remember me</span>
+            </label>
+            <a href="#" class="login-link" data-forgot>Forgot password?</a>
+          </div>
+
+          <div class="login-form-error" id="librarianFormError" role="alert" aria-live="assertive"></div>
+
+          <button type="submit" class="btn-primary full login-submit">Sign In as Librarian</button>
+        </form>
+
+        <div class="login-demo-hint">
+          <strong>Prototype demo credentials</strong> — Username: <code>librarian</code> &nbsp;·&nbsp; Password: <code>NDMC@2026</code>
+        </div>
+
+        <p class="login-switch-portal">
+          Not a librarian? <a href="student.html" class="login-link">Go to the Student portal</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+<!-- ===================== APP SHELL ===================== -->
+  <div class="app-shell" id="appShell">
+
+  <!-- ===================== SIDEBAR ===================== -->
+  <nav class="sidebar" id="sidebar" aria-label="Primary">
+    <div class="sidebar-header">
+      <div class="logo-seal">
+        <img id="ndmLogo" alt="NDM College Seal" class="seal-img"/>
+      </div>
+      <div class="logo-text">
+        <span class="logo-school">Notre Dame of Midsayap College</span>
+        <span class="logo-system">QuickBorrow Library Management System</span>
+      </div>
+    </div>
+
+    <div class="sidebar-divider"></div>
+
+    <ul class="nav-links" role="menu">
+      <li class="nav-item active" data-page="dashboard" data-roles="librarian" role="menuitem" tabindex="0" aria-current="page">
+        <span class="nav-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span>
+        <span class="nav-label">Dashboard</span>
+      </li>
+      <li class="nav-item" data-page="books" data-roles="librarian" role="menuitem" tabindex="0">
+        <span class="nav-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+        <span class="nav-label">Book Catalog</span>
+      </li>
+      <li class="nav-item" data-page="users" data-roles="librarian" role="menuitem" tabindex="0">
+        <span class="nav-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+        <span class="nav-label">Users</span>
+      </li>
+      <li class="nav-item" data-page="borrow" data-roles="librarian" role="menuitem" tabindex="0">
+        <span class="nav-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="15" x2="15" y2="15"/><line x1="9" y1="11" x2="15" y2="11"/></svg></span>
+        <span class="nav-label">Borrow / Return</span>
+      </li>
+      <li class="nav-item" data-page="reports" data-roles="librarian" role="menuitem" tabindex="0">
+        <span class="nav-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
+        <span class="nav-label">Reports</span>
+      </li>
+      
+      
+      
+      <li class="nav-item" data-page="notifications" data-roles="librarian,student" role="menuitem" tabindex="0">
+        <span class="nav-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span>
+        <span class="nav-label">Notifications</span>
+        <span class="nav-badge" id="notifNavBadge" style="display:none">0</span>
+      </li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <div class="system-status">
+        <span class="status-dot" aria-hidden="true"></span>
+        <span>System Online</span>
+      </div>
+      <div class="sidebar-clock" id="sidebarClock">--:--:--</div>
+      <button class="logout-btn" id="logoutBtn" aria-label="Log out of QuickBorrow">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Log Out
+      </button>
+    </div>
+  </nav>
+
+  <!-- ===================== MAIN ===================== -->
+  <main class="main-content" id="mainContent">
+
+    <header class="topbar">
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="sidebar">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div class="topbar-title" id="pageTitle">Dashboard</div>
+      <div class="topbar-right">
+        <div class="a11y-toolbar" role="group" aria-label="Accessibility settings">
+          <button class="a11y-btn" id="contrastToggle" aria-pressed="false" aria-label="Toggle high contrast mode" title="High contrast">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 0 20z" fill="currentColor" stroke="none"/></svg>
+          </button>
+        </div>
+        <div class="topbar-date" id="topbarDate"></div>
+        <div class="topbar-user">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          <span id="topbarUserName">Admin Librarian</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Breadcrumb trail: shows the user's current location and provides quick orientation -->
+    <nav class="breadcrumb" id="breadcrumb" aria-label="Breadcrumb"></nav>
+
+    <!-- ===== DASHBOARD ===== -->
+    <section class="page active" id="page-dashboard">
+      <div class="page-header">
+        <h1 class="page-title">System Overview</h1>
+        <p class="page-subtitle">Library Management Dashboard — Notre Dame of Midsayap College</p>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card green-accent">
+          <div class="stat-top"><div class="stat-icon-wrap green"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div><span class="stat-change green-text">Total</span></div>
+          <div class="stat-value" id="statTotalBooks">0</div>
+          <div class="stat-label">Books in Catalog</div>
+          <div class="stat-bar"><div class="stat-bar-fill green" style="width:75%"></div></div>
+        </div>
+        <div class="stat-card gold-accent">
+          <div class="stat-top"><div class="stat-icon-wrap gold"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><span class="stat-change gold-text">Active</span></div>
+          <div class="stat-value" id="statTotalUsers">0</div>
+          <div class="stat-label">Registered Members</div>
+          <div class="stat-bar"><div class="stat-bar-fill gold" style="width:60%"></div></div>
+        </div>
+        <div class="stat-card teal-accent">
+          <div class="stat-top"><div class="stat-icon-wrap teal"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><span class="stat-change teal-text">Live</span></div>
+          <div class="stat-value" id="statBorrowed">0</div>
+          <div class="stat-label">Active Borrows</div>
+          <div class="stat-bar"><div class="stat-bar-fill teal" style="width:45%"></div></div>
+        </div>
+        <div class="stat-card red-accent">
+          <div class="stat-top"><div class="stat-icon-wrap red"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><span class="stat-change red-text">Alert</span></div>
+          <div class="stat-value" id="statOverdue">0</div>
+          <div class="stat-label">Overdue Books</div>
+          <div class="stat-bar"><div class="stat-bar-fill red" style="width:20%"></div></div>
+        </div>
+      </div>
+
+      <div class="charts-row">
+        <div class="glass-card wide">
+          <div class="card-header"><span class="card-title">Borrowing Activity — Last 7 Days</span><span class="badge green">Live</span></div>
+          <canvas id="activityChart" height="110"></canvas>
+        </div>
+        <div class="glass-card">
+          <div class="card-header"><span class="card-title">Book Availability</span></div>
+          <canvas id="availabilityChart" height="160"></canvas>
+        </div>
+      </div>
+
+      <div class="charts-row equal">
+        <div class="glass-card">
+          <div class="card-header"><span class="card-title">Most Borrowed Books</span></div>
+          <canvas id="topBooksChart" height="190"></canvas>
+        </div>
+        <div class="glass-card">
+          <div class="card-header"><span class="card-title">Borrows by Department</span></div>
+          <canvas id="deptChart" height="190"></canvas>
+        </div>
+      </div>
+
+      <div class="glass-card">
+        <div class="card-header"><span class="card-title">Recent Transactions</span><span class="badge gold">Feed</span></div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>TXN ID</th><th>User</th><th>Book Title</th><th>Borrow Date</th><th>Due Date</th><th>Status</th></tr></thead>
+            <tbody id="recentTransBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== BOOKS ===== -->
+    <section class="page" id="page-books">
+      <div class="page-header">
+        <h1 class="page-title">Book Catalog</h1>
+        <p class="page-subtitle">Manage all library book records</p>
+      </div>
+      <div class="action-bar">
+        <div class="search-wrap">
+          <label for="bookSearch" class="visually-hidden">Search books by title, author, or category</label>
+          <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input type="text" id="bookSearch" class="glass-input search-input" placeholder="Search title, author, category..."/>
+        </div>
+        <label for="bookCategoryFilter" class="visually-hidden">Filter by category</label>
+        <select id="bookCategoryFilter" class="glass-select" onchange="filterBooks()">
+          <option value="">All Categories</option>
+          <option>Fiction</option><option>Non-Fiction</option><option>Science</option>
+          <option>Technology</option><option>History</option><option>Mathematics</option>
+          <option>Literature</option><option>Philosophy</option>
+        </select>
+        <button class="btn-primary" onclick="openBookModal()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add Book
+        </button>
+      </div>
+      <div class="glass-card no-pad">
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Book ID</th><th>Title</th><th>Author</th><th>Category</th><th>ISBN</th><th>Qty</th><th>Available</th><th>Date Added</th><th>Actions</th></tr></thead>
+            <tbody id="booksBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== USERS ===== -->
+    <section class="page" id="page-users">
+      <div class="page-header">
+        <h1 class="page-title">User Registry</h1>
+        <p class="page-subtitle">Registered library members and borrowers</p>
+      </div>
+      <div class="action-bar">
+        <div class="search-wrap">
+          <label for="userSearch" class="visually-hidden">Search users by name or email</label>
+          <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input type="text" id="userSearch" class="glass-input search-input" placeholder="Search name or email..."/>
+        </div>
+        <label for="deptFilter" class="visually-hidden">Filter by department</label>
+        <select id="deptFilter" class="glass-select" onchange="filterUsers()">
+          <option value="">All Departments</option>
+          <option>Computer Science</option><option>Engineering</option><option>Business</option>
+          <option>Arts</option><option>Medicine</option><option>Education</option>
+          <option>Law</option><option>Faculty</option>
+        </select>
+        <button class="btn-gold" onclick="openUserModal()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Register User
+        </button>
+      </div>
+      <div class="glass-card no-pad">
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>User ID</th><th>Name</th><th>Department</th><th>Email</th><th>Contact</th><th>Reg. Date</th><th>Actions</th></tr></thead>
+            <tbody id="usersBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== BORROW / RETURN ===== -->
+    <section class="page" id="page-borrow">
+      <div class="page-header">
+        <h1 class="page-title">Borrow / Return</h1>
+        <p class="page-subtitle">Issue and process book transactions</p>
+      </div>
+      <div class="borrow-grid">
+
+        <!-- ── BORROW BOOK (renamed from Issue Book) ── -->
+        <div class="glass-card form-card">
+          <div class="form-card-header green-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="13" x2="12" y2="17"/><line x1="10" y1="15" x2="14" y2="15"/></svg>
+            Borrow Book
+          </div>
+          <div class="form-fields">
+            <div class="field-group"><label class="field-label">Select User</label><select id="borrowUserId" class="glass-select full"></select></div>
+            <div class="field-group"><label class="field-label">Select Book</label><select id="borrowBookId" class="glass-select full"></select></div>
+            <div class="field-group"><label class="field-label">Borrow Date</label><input type="date" id="borrowDate" class="glass-input full"/></div>
+            <div class="field-group"><label class="field-label">Due Date</label><input type="date" id="dueDate" class="glass-input full"/></div>
+            <button class="btn-primary full" onclick="borrowBook()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              Borrow Book
+            </button>
+          </div>
+        </div>
+
+        <!-- ── RETURN BOOK ── -->
+        <div class="glass-card form-card">
+          <div class="form-card-header gold-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12h18"/><path d="m3 12 6-6"/><path d="m3 12 6 6"/></svg>
+            Return Book
+          </div>
+          <div class="form-fields">
+            <div class="field-group"><label class="field-label">Select Transaction</label><select id="returnTransId" class="glass-select full"></select></div>
+            <div class="field-group"><label class="field-label">Return Date</label><input type="date" id="returnDate" class="glass-input full"/></div>
+            <div class="return-preview" id="returnPreview" style="display:none">
+              <div class="preview-row"><span>Book</span><span id="previewBook">—</span></div>
+              <div class="preview-row"><span>User</span><span id="previewUser">—</span></div>
+              <div class="preview-row"><span>Due Date</span><span id="previewDue">—</span></div>
+              <div class="preview-row"><span>Status</span><span id="previewStatus">—</span></div>
+            </div>
+            <button class="btn-gold full" onclick="returnBook()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18"/><path d="m3 12 6-6"/><path d="m3 12 6 6"/></svg>
+              Process Return
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── BOOK CONDITION / ISSUE REPORT ── -->
+      <div class="glass-card issue-report-card" style="margin-top:1.5rem">
+        <div class="form-card-header red-header" style="margin: -22px -22px 20px; border-radius: var(--radius-lg) var(--radius-lg) 0 0; padding:14px 20px; border-bottom:1px solid var(--glass-border);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+          Report Book Condition / Issue
+          <span class="badge red" style="margin-left:auto">New</span>
+        </div>
+        <p class="issue-report-hint">Borrowers must report any damage, missing pages, or concerns about a borrowed book. This is recorded permanently in their borrowing history.</p>
+        <div class="issue-report-grid">
+          <div class="issue-form-col">
+            <div class="form-fields">
+              <div class="field-group">
+                <label class="field-label">Select Active Transaction</label>
+                <select id="issueTransId" class="glass-select full" onchange="previewIssueTransaction()"></select>
+              </div>
+              <div class="issue-txn-preview" id="issueTxnPreview" style="display:none">
+                <div class="preview-row"><span>Book</span><span id="issuePreviewBook">—</span></div>
+                <div class="preview-row"><span>Borrower</span><span id="issuePreviewUser">—</span></div>
+                <div class="preview-row"><span>Borrowed</span><span id="issuePreviewDate">—</span></div>
+              </div>
+              <div class="field-group">
+                <label class="field-label">Condition / Issue Type</label>
+                <select id="issueType" class="glass-select full">
+                  <option value="">— Select Type —</option>
+                  <option value="Torn Pages">Torn Pages</option>
+                  <option value="Water Damage">Water Damage</option>
+                  <option value="Missing Pages">Missing Pages</option>
+                  <option value="Cover Damage">Cover Damage</option>
+                  <option value="Spine Damage">Spine Damage</option>
+                  <option value="Stains / Markings">Stains / Markings</option>
+                  <option value="Lost Book">Lost Book</option>
+                  <option value="Good Condition">Good Condition (No Issues)</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div class="field-group">
+                <label class="field-label">Report Date</label>
+                <input type="date" id="issueReportDate" class="glass-input full"/>
+              </div>
+              <button class="btn-red full" onclick="submitIssueReport()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+                Submit Issue Report
+              </button>
+            </div>
+          </div>
+
+          <!-- Issue history mini-table -->
+          <div class="issue-history-col">
+            <div class="card-header" style="margin-bottom:12px">
+              <span class="card-title">Recent Issue Reports</span>
+              <span class="badge red" id="issueCount">0 Reports</span>
+            </div>
+            <div class="table-wrap issue-history-scroll">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Report ID</th>
+                    <th>Borrower</th>
+                    <th>Book</th>
+                    <th>Issue Type</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="issueHistoryBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── RESERVATION QUEUE ── -->
+      <div class="glass-card" style="margin-top:1.5rem">
+        <div class="card-header">
+          <span class="card-title">Reservation Queue</span>
+          <span class="badge gold" id="reservationCount">0 Pending</span>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Reservation ID</th><th>Student</th><th>Book Title</th><th>Reserved On</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="reservationBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── ALL TRANSACTIONS ── -->
+      <div class="glass-card" style="margin-top:1.5rem">
+        <div class="card-header">
+          <span class="card-title">All Transactions</span>
+          <select id="txnStatusFilter" class="glass-select sm" onchange="filterTransactions()">
+            <option value="">All Status</option><option>Borrowed</option><option>Returned</option><option>Overdue</option>
+          </select>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>TXN ID</th><th>User</th><th>Book</th><th>Borrow Date</th><th>Due Date</th><th>Return Date</th><th>Status</th></tr></thead>
+            <tbody id="transBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== REPORTS ===== -->
+    <section class="page" id="page-reports">
+      <div class="page-header">
+        <h1 class="page-title">Reports &amp; Analytics</h1>
+        <p class="page-subtitle">Export data for Power BI integration</p>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card green-accent"><div class="stat-top"><div class="stat-icon-wrap green"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div></div><div class="stat-value" id="rStatBooks">0</div><div class="stat-label">Total Books</div></div>
+        <div class="stat-card gold-accent"><div class="stat-top"><div class="stat-icon-wrap gold"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div></div><div class="stat-value" id="rStatUsers">0</div><div class="stat-label">Total Users</div></div>
+        <div class="stat-card teal-accent"><div class="stat-top"><div class="stat-icon-wrap teal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg></div></div><div class="stat-value" id="rStatBorrowed">0</div><div class="stat-label">Total Borrowed</div></div>
+        <div class="stat-card green-accent"><div class="stat-top"><div class="stat-icon-wrap green"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="20 6 9 17 4 12"/></svg></div></div><div class="stat-value" id="rStatReturned">0</div><div class="stat-label">Total Returned</div></div>
+        <div class="stat-card red-accent"><div class="stat-top"><div class="stat-icon-wrap red"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div></div><div class="stat-value" id="rStatOverdue">0</div><div class="stat-label">Overdue Books</div></div>
+      </div>
+      <div class="glass-card">
+        <div class="card-header"><span class="card-title">Fine Calculation</span><span class="badge gold">Optional</span></div>
+        <div class="fine-settings-row">
+          <label class="checkbox-label" for="fineEnabledToggle">
+            <input type="checkbox" id="fineEnabledToggle" onchange="toggleFineSetting()"/>
+            <span>Automatically calculate fines for overdue books</span>
+          </label>
+          <div class="field-group fine-rate-field">
+            <label class="field-label" for="fineRateInput">Fine per day overdue (₱)</label>
+            <input type="number" id="fineRateInput" class="glass-input" min="0" step="0.5" style="max-width:120px" onchange="toggleFineSetting()"/>
+          </div>
+        </div>
+        <p class="issue-report-hint">When enabled, fines are calculated automatically from days overdue and shown to librarians here and to students in their "My Borrowing" page. This is a prototype calculation only.</p>
+      </div>
+
+      <div class="export-grid">
+        <div class="export-card green-border"><div class="export-icon-wrap green"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div><div class="export-body"><div class="export-title">Books Table</div><div class="export-desc">BookID · Title · Author · Category · ISBN · Qty · Available · DateAdded</div></div><div class="export-btns"><button class="btn-sm green" onclick="exportData('books','csv')">CSV</button><button class="btn-sm outline" onclick="exportData('books','json')">JSON</button></div></div>
+        <div class="export-card gold-border"><div class="export-icon-wrap gold"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><div class="export-body"><div class="export-title">Users Table</div><div class="export-desc">UserID · Name · Department · Email · Contact · RegistrationDate</div></div><div class="export-btns"><button class="btn-sm gold" onclick="exportData('users','csv')">CSV</button><button class="btn-sm outline" onclick="exportData('users','json')">JSON</button></div></div>
+        <div class="export-card teal-border"><div class="export-icon-wrap teal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div class="export-body"><div class="export-title">Transactions Table</div><div class="export-desc">TransactionID · UserID · BookID · BorrowDate · DueDate · ReturnDate · Status</div></div><div class="export-btns"><button class="btn-sm teal" onclick="exportData('transactions','csv')">CSV</button><button class="btn-sm outline" onclick="exportData('transactions','json')">JSON</button></div></div>
+        <div class="export-card red-border"><div class="export-icon-wrap red"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg></div><div class="export-body"><div class="export-title">Issue Reports Table</div><div class="export-desc">ReportID · TransactionID · UserID · BookID · IssueType · Description · ReportDate · Severity</div></div><div class="export-btns"><button class="btn-sm red" onclick="exportData('issues','csv')">CSV</button><button class="btn-sm outline" onclick="exportData('issues','json')">JSON</button></div></div>
+        <div class="export-card green-border"><div class="export-icon-wrap green"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><polyline points="8 17 12 21 16 17"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.88 18.09A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.29"/></svg></div><div class="export-body"><div class="export-title">Full Dataset</div><div class="export-desc">Combined JSON of all tables including Issue Reports for Power BI import</div></div><div class="export-btns"><button class="btn-sm green" onclick="exportData('all','json')">Full JSON</button></div></div>
+      </div>
+      <div class="glass-card">
+        <div class="card-header"><span class="card-title">Overdue Monitoring</span><span class="badge red">Critical</span></div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>TXN ID</th><th>User Name</th><th>Book Title</th><th>Due Date</th><th>Days Overdue</th><th>Department</th></tr></thead>
+            <tbody id="overdueBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Issue Reports in Reports page -->
+      <div class="glass-card" style="margin-top:0">
+        <div class="card-header">
+          <span class="card-title">Book Condition &amp; Issue Reports</span>
+          <span class="badge red" id="rStatIssues">0 Reports</span>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Report ID</th><th>Borrower</th><th>Book Title</th><th>Issue Type</th><th>Description</th><th>Report Date</th><th>Severity</th></tr></thead>
+            <tbody id="reportIssueBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="glass-card pbi-card">
+        <div class="card-header"><span class="card-title" style="color:var(--gold)">Power BI Integration Guide</span></div>
+        <div class="pbi-steps">
+          <div class="pbi-step"><span class="pbi-num">01</span><span>Export CSV or JSON files using the export buttons above</span></div>
+          <div class="pbi-step"><span class="pbi-num">02</span><span>Open Power BI Desktop → Get Data → Text/CSV or JSON</span></div>
+          <div class="pbi-step"><span class="pbi-num">03</span><span>Import Books, Users, Transactions, and Issue Reports as separate tables</span></div>
+          <div class="pbi-step"><span class="pbi-num">04</span><span>Create relationships: Transactions[UserID]→Users[UserID], Transactions[BookID]→Books[BookID], IssueReports[TransactionID]→Transactions[TransactionID]</span></div>
+          <div class="pbi-step"><span class="pbi-num">05</span><span>Build visuals: Cards (totals), Line Chart (activity), Bar (top books), Pie (departments), Donut (availability), Table (overdue), Table (issue reports)</span></div>
+          <div class="pbi-step"><span class="pbi-num">06</span><span>Publish to Power BI Service for shared dashboard access</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== STUDENT: MY DASHBOARD ===== -->
+    
+
+    <!-- ===== STUDENT: FIND A BOOK ===== -->
+    
+
+    <!-- ===== STUDENT: MY BORROWING ===== -->
+    
+
+    <!-- ===== NOTIFICATIONS (shared) ===== -->
+    <section class="page" id="page-notifications">
+      <div class="page-header">
+        <h1 class="page-title">Notifications</h1>
+        <p class="page-subtitle">Due dates, overdue alerts, new arrivals, and announcements</p>
+      </div>
+      <div class="glass-card no-pad">
+        <ul class="notif-list" id="notifList"></ul>
+      </div>
+    </section>
+
+  </main>
+
+  </div><!-- /#appShell -->
+
+<!-- ===== BOOK MODAL ===== -->
+  <div class="modal-overlay" id="bookModalOverlay">
+    <div class="modal glass-modal">
+      <div class="modal-header">
+        <span class="modal-title" id="bookModalTitle">Add New Book</span>
+        <button class="modal-close" onclick="closeBookModal()" aria-label="Close dialog"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="editBookId"/>
+        <div class="form-row">
+          <div class="field-group"><label class="field-label" for="bookTitle">Title <span class="required-mark" aria-hidden="true">*</span></label><input type="text" id="bookTitle" class="glass-input full" placeholder="e.g. Clean Code" required aria-required="true" aria-describedby="bookTitleError"/><span class="field-error" id="bookTitleError" role="alert" aria-live="polite"></span></div>
+          <div class="field-group"><label class="field-label" for="bookAuthor">Author <span class="required-mark" aria-hidden="true">*</span></label><input type="text" id="bookAuthor" class="glass-input full" placeholder="e.g. Robert C. Martin" required aria-required="true" aria-describedby="bookAuthorError"/><span class="field-error" id="bookAuthorError" role="alert" aria-live="polite"></span></div>
+        </div>
+        <div class="form-row">
+          <div class="field-group"><label class="field-label" for="bookCategory">Category</label><select id="bookCategory" class="glass-select full"><option>Fiction</option><option>Non-Fiction</option><option>Science</option><option>Technology</option><option>History</option><option>Mathematics</option><option>Literature</option><option>Philosophy</option></select></div>
+          <div class="field-group"><label class="field-label" for="bookISBN">ISBN</label><input type="text" id="bookISBN" class="glass-input full" placeholder="e.g. 978-0132350884"/></div>
+        </div>
+        <div class="form-row">
+          <div class="field-group"><label class="field-label" for="bookQty">Quantity <span class="required-mark" aria-hidden="true">*</span></label><input type="number" id="bookQty" class="glass-input full" placeholder="e.g. 5" min="1" required aria-required="true" aria-describedby="bookQtyError"/><span class="field-error" id="bookQtyError" role="alert" aria-live="polite"></span></div>
+          <div class="field-group"><label class="field-label" for="bookDateAdded">Date Added</label><input type="date" id="bookDateAdded" class="glass-input full"/></div>
+        </div>
+
+        <details class="book-more-details">
+          <summary>More catalog details (optional)</summary>
+          <div class="form-row">
+            <div class="field-group"><label class="field-label" for="bookSubtitle">Subtitle</label><input type="text" id="bookSubtitle" class="glass-input full" placeholder="e.g. A Handbook of Agile Software Craftsmanship"/></div>
+            <div class="field-group"><label class="field-label" for="bookPublisher">Publisher</label><input type="text" id="bookPublisher" class="glass-input full" placeholder="e.g. Prentice Hall"/></div>
+          </div>
+          <div class="form-row">
+            <div class="field-group"><label class="field-label" for="bookSubject">Subject</label><input type="text" id="bookSubject" class="glass-input full" placeholder="e.g. Software Engineering"/></div>
+            <div class="field-group"><label class="field-label" for="bookShelf">Shelf Location</label><input type="text" id="bookShelf" class="glass-input full" placeholder="e.g. Aisle 3, Shelf B"/></div>
+          </div>
+          <div class="form-row">
+            <div class="field-group"><label class="field-label" for="bookCallNumber">Call Number</label><input type="text" id="bookCallNumber" class="glass-input full" placeholder="e.g. 005.1 MAR"/></div>
+            <div class="field-group"><label class="field-label" for="bookStatus">Book Status</label>
+              <select id="bookStatus" class="glass-select full"><option>Active</option><option>Damaged</option><option>Lost</option><option>Under Repair</option></select>
+            </div>
+          </div>
+          <div class="field-group"><label class="field-label" for="bookDescription">Description</label><textarea id="bookDescription" class="glass-input full glass-textarea" rows="3" placeholder="Short summary shown to students in the catalog"></textarea></div>
+        </details>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-outline" onclick="closeBookModal()">Cancel</button>
+        <button class="btn-primary" onclick="saveBook()">Save Book</button>
+      </div>
+    </div>
+  </div>
+
+  
+
+<!-- ===== USER MODAL ===== -->
+  <div class="modal-overlay" id="userModalOverlay">
+    <div class="modal glass-modal">
+      <div class="modal-header">
+        <span class="modal-title" id="userModalTitle">Register User</span>
+        <button class="modal-close" onclick="closeUserModal()" aria-label="Close dialog"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="editUserId"/>
+        <div class="form-row">
+          <div class="field-group"><label class="field-label" for="userName">Full Name <span class="required-mark" aria-hidden="true">*</span></label><input type="text" id="userName" class="glass-input full" placeholder="e.g. Ana Marie Santos" required aria-required="true" aria-describedby="userNameError"/><span class="field-error" id="userNameError" role="alert" aria-live="polite"></span></div>
+          <div class="field-group"><label class="field-label" for="userDept">Department <span class="required-mark" aria-hidden="true">*</span></label><select id="userDept" class="glass-select full"><option>Computer Science</option><option>Engineering</option><option>Business</option><option>Arts</option><option>Medicine</option><option>Education</option><option>Law</option><option>Faculty</option></select></div>
+        </div>
+        <div class="form-row">
+          <div class="field-group"><label class="field-label" for="userEmail">Email <span class="required-mark" aria-hidden="true">*</span></label><input type="email" id="userEmail" class="glass-input full" placeholder="e.g. name@ndmc.edu.ph" required aria-required="true" aria-describedby="userEmailError"/><span class="field-error" id="userEmailError" role="alert" aria-live="polite"></span></div>
+          <div class="field-group"><label class="field-label" for="userContact">Contact Number</label><input type="text" id="userContact" class="glass-input full" placeholder="e.g. +63 9XX XXX XXXX"/></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-outline" onclick="closeUserModal()">Cancel</button>
+        <button class="btn-gold" onclick="saveUser()">Register</button>
+      </div>
+    </div>
+  </div>
+
+  
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="script.js"></script>
+</body>
+</html>
